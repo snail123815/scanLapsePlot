@@ -1,0 +1,36 @@
+CornerSize	x	y	size	
+TL	372	666	372	
+TR	1392	702	372	
+ML	714	1722	372	
+MR	1716	1746	372	
+BL	366	2718	372	
+BR	1380	2736	372	
+				
+CentreSize	x	y	size	
+				
+WidthHeight	x1	y1	Width	Height
+				
+# Include 'removePadding' if you need to remove certain padding				
+# Only valid under 'WidthHeight' or 'TwoPositions'				
+removePadding	24	360	2472	3060
+				
+TwoPositions	x1	y1	x2	y2
+				
+"# Polygon accepts recorded marco string from imageJ (FIJI) (eg 'makePolygon(852,588,660,1184,1288,1216);')"				
+# 'Plugins' -> 'Marcos' -> 'Record...'				
+Polygon	makePolygon();			
+				
+END_POSITION # Location parse will stop here. DO NOT DELETE THIS LINE				
+				
+"# measure in ['centreDisk', 'square', 'polygon']"				
+# colour will be default if empty				
+# Order will be kept in plotting				
+"# You can add any column you like, but keep 'measure' and 'colour'"				
+sampleInfo	strain	measure	colour	
+TL	A_Ctr	centreDisk	firebrick	
+BR	A_Tr1	centreDisk	tomato	
+TR	A_Tr2	centreDisk	lightsalmon	
+BL	B_Ctr	centreDisk	darkblue	
+MR	B_Tr1	centreDisk	royalblue	
+ML	B_Tr2	centreDisk	lightsteelblue	
+END_INFO # DO NOT DELETE THIS LINE				

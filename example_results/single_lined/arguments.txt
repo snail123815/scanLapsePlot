@@ -1,0 +1,8 @@
+.\Scanner_timelapse_plotting_demo\program\extractPicAndMeasure.exe .\Scanner_timelapse_plotting_demo\images_2 .\Scanner_timelapse_plotting_demo\extractPicture_PositionsAndInfo_2.tsv
+
+Namespace(rootPath='.\\Scanner_timelapse_plotting_demo\\images_2', sampleInfoTsvPath='.\\Scanner_timelapse_plotting_demo\\extractPicture_PositionsAndInfo_2.tsv', normType='Combined', endTiming=None, percentage=1.0, resizeFactor=0.35, noTimeFromFile=False, locationFromCropped=False, forceNoFillBetween=False, imageInterval=1.0, startImageTiming=0.0, reExtract=False, reMeasure=False, diffPos=None)
+24 50	# Vertical lines
+k r	# Vertical line colours
+24	# Lower vertical lines
+0.0 72.0	# Time range
+strain	# Level

@@ -1,0 +1,75 @@
+CornerSize	x	y	size	
+1	1464	816	352	
+2	2120	900	352	
+3	1072	1132	352	
+4	1744	1212	352	
+5	2428	1308	352	
+6	1356	1528	352	
+7	2060	1608	352	
+8	1012	1852	352	
+9	1660	1956	352	
+10	2356	2020	352	
+11	1296	2256	352	
+12	1960	2360	352	
+13	3404	852	352	
+14	4080	860	352	
+15	3056	1212	352	
+16	3736	1212	352	
+17	4400	1236	352	
+18	3392	1564	352	
+19	4072	1596	352	
+20	3040	1916	352	
+21	3724	1940	352	
+22	4392	1976	352	
+23	3384	2296	352	
+24	4056	2316	352	
+				
+				
+				
+CentreSize	x	y	size	
+				
+WidthHeight	x1	y1	Width	Height
+				
+# Include 'removePadding' if you need to remove certain padding				
+# Only valid under 'WidthHeight' or 'TwoPositions'				
+removePadding	40	736	4960	6144
+				
+TwoPositions	x1	y1	x2	y2
+				
+"# Polygon accepts recorded marco string from imageJ (FIJI) (eg 'makePolygon(852,588,660,1184,1288,1216);')"				
+# 'Plugins' -> 'Marcos' -> 'Record...'				
+Polygon	makePolygon();			
+				
+END_POSITION # Location parse will stop here. DO NOT DELETE THIS LINE				
+				
+"# measure in ['centreDisk', 'square', 'polygon']"				
+# colour will be default if empty				
+# Order will be kept in plotting				
+"# You can add any column you like, but keep 'measure' and 'colour'"				
+sampleInfo	strain	measure	colour	
+1	A	centreDisk		
+2	A	centreDisk		
+3	A	centreDisk		
+4	A	centreDisk		
+5	A	centreDisk		
+6	A	centreDisk		
+7	A	centreDisk		
+8	A	centreDisk		
+9	A	centreDisk		
+10	A	centreDisk		
+11	A	centreDisk		
+12	A	centreDisk		
+13	B	centreDisk		
+14	B	centreDisk		
+15	B	centreDisk		
+16	B	centreDisk		
+17	B	centreDisk		
+18	B	centreDisk		
+19	B	centreDisk		
+20	B	centreDisk		
+21	B	centreDisk		
+22	B	centreDisk		
+23	B	centreDisk		
+24	B	centreDisk		
+				
+END_INFO # DO NOT DELETE THIS LINE				
