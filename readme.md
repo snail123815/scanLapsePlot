@@ -156,7 +156,7 @@ SHA1: `f9a462f3ec452aca18732ef0bb664a10fe8715ff extractPicAndMeasure`
 Of course you need to do the compilation on Windows.
 
 ```powershell
-> pyinstaller -F extractPicAndMeasure.py --distpath Dist --workpath building_temp --hidden-import openpyxl --hidden-import cmath
+PS C:\Users\user> pyinstaller -F extractPicAndMeasure.py --distpath Dist --workpath building_temp --hidden-import openpyxl --hidden-import cmath
 ```
 
 No special errors happened. It seems that `openpyxl` import has been recognised automatically.
