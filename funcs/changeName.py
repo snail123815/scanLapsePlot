@@ -91,45 +91,40 @@ def determinePrefixExtension(path):
     extension = determineExtension(path)
     # find prefix
     prefixList = []
+    prefixNums = []
     totalNum = 0
     for file in filesFolders:
-        name, ext = os.path.splitext(file)
+        _, ext = os.path.splitext(file)
         if ext == extension:
             totalNum += 1
-            nums = re.findall(r'[0-9]+', name)
-            if len(nums) != 0:
-                num = nums[-1]
-                prefix = name[:-len(num)]
-            else:
+            prefix, _ = findPrefix(file)
+            if prefix == None:
                 continue
-            prefixList.append(prefix)
-    # dereplication
-    prefixList = list(set(prefixList))
-    while len(prefixList) != 1:  # ask for help
-        isSet = False
-        while not isSet:
-            prefix = input(
-                f"I don't know which prefix is correct, please choose one:\n{prefixList}\n")
-            if prefix in prefixList:
-                prefixList = [prefix, ]
-                isSet = True
+            if prefix not in prefixList:
+                prefixList.append(prefix)
+                prefixNums.append(1)
             else:
-                print('Please type in any of the above.')
-    prefix = prefixList[0]
-
-    if totalNum < 100:
-        digits = 2
-    elif totalNum < 10000:
-        digits = 3
-    elif totalNum < 100000:
-        digits = 4
-    else:
-        print(f'Are you sure, {totalNum} of files? (I quit)')
-        exit()
+                prefixNums[prefixList.index(prefix)] += 1
+    prefix = prefixList[prefixNums.index(max(prefixNums))]
+    digits = len(str(totalNum))
 
     return prefix, extension, totalNum, digits
 # determinePrefixExtension
 
+def findPrefix(f):
+    f = os.path.splitext(f)[0]
+    p = None
+    try:
+        nstr = re.findall(r'[0-9]+$', f)[-1]
+        n = int(nstr) - 1
+        p = f[:-len(nstr)]
+        if not p.endswith('_'):
+            p = None
+            # will not distinguish file names like:
+            # abc_45.jpg and abc_45_1.jpg
+    except:
+        n = 0
+    return p, n
 
 def getScanTime(filePath):
     """Try to get the date that a file was created, falling back to when it was
@@ -152,7 +147,7 @@ def getScanTime(filePath):
 
 
 def genLogFile(path):
-    return os.path.join(path, 'nameTimeLog')
+    return os.path.join(path, 'nameTimeLog.pickle')
 
 
 def changeToNew(path, dictOld2New, dictOldScanTime):
@@ -175,7 +170,7 @@ def changeToNew(path, dictOld2New, dictOldScanTime):
     prefix, extension, totalNum, digits = determinePrefixExtension(path)
     if len(dictOld2New) == 0:
         isFresh = True
-        files = [file for file in os.listdir(path) if file.endswith(extension)]
+        files = [f for f in os.listdir(path) if f.endswith(extension)]
     else:
         files = dictOld2New.keys()
 
@@ -185,19 +180,13 @@ def changeToNew(path, dictOld2New, dictOldScanTime):
         oldFilePath = os.path.join(path, oldName)
         if isFresh:
             foundNo1 = False
-            nums = re.findall(r'[0-9]+', oldName)
-            if len(nums) != 0:
-                num = int(nums[-1]) - 1  # scanner starts numbering from 2
-            else:
-                num = 0
+            p, n = findPrefix(oldName)
+            if p != prefix:
                 if foundNo1:
-                    raise NameError('Another file with no numbering?')
+                    raise NameError(f'Another file with no numbering? {oldName}')
                 else:
                     foundNo1 = True
-            if not oldName.startswith(prefix[:-1]):
-                print(f'{oldName} not starts with {prefix}')
-                continue
-            newName = f'{prefix}{str(num).zfill(digits)}{extension}'
+            newName = f'{prefix}{str(n).zfill(digits)}{extension}'
             dictOld2New[oldName] = newName
             dictOldScanTime[newName] = getScanTime(oldFilePath)
         else:
