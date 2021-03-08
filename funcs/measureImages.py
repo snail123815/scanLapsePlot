@@ -5,10 +5,10 @@ import re
 from skimage import draw
 from skimage.io import imread
 
-from funcs import getScanTime, determineExtension
+from funcs import determineExtension
 
 
-def measureImgs(path, measureType='centreDisk', polygons=[(0, 0, 1, 0, 0, 1), ], percentage=1.0, forceUseFileNumber=False, fileNumberTimeInterval=1) -> np.ndarray:
+def measureImgs(path, dictOldScanTime=None, measureType='centreDisk', polygons=[(0, 0, 1, 0, 0, 1), ], percentage=1.0, forceUseFileNumber=False, fileNumberTimeInterval=1) -> np.ndarray:
     """Measure all images in path\n
     Return a numpy array of shape (len(files), 2).\n
 
@@ -45,6 +45,17 @@ def measureImgs(path, measureType='centreDisk', polygons=[(0, 0, 1, 0, 0, 1), ],
     filePaths = sorted([os.path.join(path, file)
                         for file in os.listdir(path) if file.endswith(extension)])
 
+    def getOriName(f):
+        # pass in file names from subImages folder
+        f = os.path.split(f)[-1]
+        posName = f.split('_')[-1]
+        o = f.replace(posName, '')[:-1]
+        o = o.split('_cropped')[0]  # when use cropped is true
+        return o
+
+    def getTime(f):
+        return dictOldScanTime[f'{getOriName(f)}{extension}']
+
     measureTypes = [
         'centreDisk',  # Measure a circle with diameter is a percentage (percentage) of the image width
         'square',     # Measure a square with the width is a percentage of the image width
@@ -53,21 +64,23 @@ def measureImgs(path, measureType='centreDisk', polygons=[(0, 0, 1, 0, 0, 1), ],
     ]
     assert measureType in measureTypes, f'{measureType} not accepted. ({", ".join(measureTypes)})'
     assert 0 < percentage <= 1.0, 'percentage should be in range (0, 1]'
-    for polygon in polygons:
-        assert len(polygon) >= 6 and len(polygon) % 2 == 0, f'polygon setup error (x1, y1, x2, y2, x3, y3 ...). At least 6, even number\n{polygon}'
-    if len(polygons) == 1:  # expend
-        polygons = polygons * len(filePaths)
-    elif len(polygons) < len(filePaths):  # fill in with the last polygon tuple
-        n = len(filePaths) - len(polygons)
-        polygons += polygons[-1] * n
-    assert len(polygons) == len(filePaths)
+    if measureType == 'polygon':
+        for polygon in polygons:
+            assert len(polygon) >= 6 and len(
+                polygon) % 2 == 0, f'polygon setup error (x1, y1, x2, y2, x3, y3 ...). At least 6, even number\n{polygon}'
+        if len(polygons) == 1:  # expend
+            polygons = polygons * len(filePaths)
+        elif len(polygons) < len(filePaths):  # fill in with the last polygon tuple
+            n = len(filePaths) - len(polygons)
+            polygons += polygons[-1] * n
+        assert len(polygons) == len(filePaths)
 
     # Determine if use file time or use 1 h as interval
     useFileTime = True
-    if forceUseFileNumber:
+    if forceUseFileNumber or dictOldScanTime == None:
         useFileTime = False
     else:
-        times = [getScanTime(f) for f in filePaths[:2]]
+        times = [getTime(f) for f in filePaths[:2]]
         firstInterval = times[1] - times[0]
         if firstInterval < 300:
             useFileTime = False
@@ -76,13 +89,10 @@ def measureImgs(path, measureType='centreDisk', polygons=[(0, 0, 1, 0, 0, 1), ],
     data = np.zeros((len(filePaths), 2))
     for i, filePath in enumerate(filePaths):
         if useFileTime:
-            time = getScanTime(filePath)/3600  # convert to hours
+            time = getTime(filePath)/3600  # convert to hours
         else:
             file = os.path.split(filePath)[1]
-            # Temove text before the last '_' (this should be subimages, the added posName needs removal)
-            oriImgName = file.replace(file.split('_')[-1], '')[:-1]
-            oriImgName = oriImgName.split('_cropped')[0] # when use cropped is true
-            n = int(re.findall(r'[0-9]+', oriImgName)[-1])
+            n = int(re.findall(r'[0-9]+', file)[-1])
             time = n * fileNumberTimeInterval
         im = imread(filePath, as_gray=True)
         if measureType == 'centreDisk':

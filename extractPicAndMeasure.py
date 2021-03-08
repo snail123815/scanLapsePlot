@@ -80,7 +80,7 @@ if __name__ == '__main__':
         changeFileName(rootPath, reverse=False)
     oldFiles, newFiles = ([], [])
     with open(renameLogFile, 'rb') as f:
-        dictOld2New, _, _ = pickle.load(f)
+        dictOld2New, dictOldScanTime, _ = pickle.load(f)
     for of in dictOld2New:
         oldFiles.append(of)
         newFiles.append(dictOld2New[of])
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     assert len(set(folders)) == len(folders), f'There are duplications in the sample IDs:\n{[i for i in folders if folders.count(i) > 1]}'
 
     # See if the previous picture extraction has resulted any file (avoid empty measurment)
-    firstSubFolder = os.path.join(rootPath,folders[0])
+    firstSubFolder = os.path.join(rootPath, folders[0])
     if os.path.isdir(firstSubFolder):
         if not len(os.listdir(firstSubFolder)) > 2:
             doExtractPics = True
@@ -285,6 +285,7 @@ if __name__ == '__main__':
             future = threadPool.submit(
                 measureImgs,
                 os.path.join(rootPath, 'subImages', folder),
+                dictOldScanTime,
                 measureType,
                 polygons=polygons,
                 percentage=percentage,
