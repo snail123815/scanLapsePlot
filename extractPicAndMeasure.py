@@ -127,7 +127,7 @@ if __name__ == '__main__':
 
     # Compare hashes with previously runs, extract pictures again if not the same
     # Also consider reExtract argument
-    posFileHashesFile = os.path.join(rootPath, 'Hashes for last measurement metadata files'.replace(' ', '_'))
+    posFileHashesFile = os.path.join(rootPath, 'Hashes for last measurement metadata files.pickle'.replace(' ', '_'))
     doExtractPics = True
     extractArgsStatic = [diffPosFileHashes, useCroppedImg, locFromCropped, diffPos]
     if os.path.isdir(os.path.join(rootPath, 'subImages')) and os.path.isfile(posFileHashesFile) and not reExtract:
