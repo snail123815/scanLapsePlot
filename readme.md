@@ -147,10 +147,6 @@ Except running prerequisites, you need to install pyinstaller using pip:
 
 `cmath` was found during testing in a fresh Big Sur.
 
-MD5: `c8e1dce1f3c8278d44c6aba28170b3e2 extractPicAndMeasure`
-
-SHA1: `f9a462f3ec452aca18732ef0bb664a10fe8715ff extractPicAndMeasure`
-
 ### For Windows (Windows 10 tested)
 
 Of course you need to do the compilation on Windows.
@@ -160,7 +156,3 @@ PS C:\Users\user> pyinstaller -F extractPicAndMeasure.py --distpath Dist --workp
 ```
 
 No special errors happened. It seems that `openpyxl` import has been recognised automatically.
-
-MD5: `cc884ea5452d214801d6581e84017a27 extractPicAndMeasure.exe`
-
-SHA1: `26af10900a256af7f2c95f6fb3a48d0dc51650fb extractPicAndMeasure.exe`
