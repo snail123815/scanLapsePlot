@@ -356,9 +356,11 @@ if __name__ == '__main__':
     while isSatisified != 'y':
         fig, plotData = plotMeasured(allPicsData, sampleInfo, level, forceNoFillBetween,
                                      vlines=vlines, vlineColours=vlineColours, lowerVlines=lowerVlines, timeRange=timeRange)
-        isSatisified = input("Satisfied with the result? y/n:")
+        isSatisified = input("Satisfied with the result? y/n/q(quit):")
         if isSatisified == 'y':
             break
+        elif isSatisified == 'q':
+            sys.exit()
 
         # Get values for the next plot
         newVlines = input("Vertical lines? Separate using spaces eg. '24 46 70'\n")
