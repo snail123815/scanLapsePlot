@@ -41,58 +41,64 @@ def plotMeasured(
 
     fig, ax = plt.subplots(1, 1)
 
-    # Deduplicate group keys under this level, keep order
     groups = [sampleInfo[posName][level] for posName in sampleInfo]
     uniqueGroups = []
-    if forceNoFillBetween:
-        uniqueGroups = groups
-    else:
-        for g in groups:
-            if g in uniqueGroups:
-                continue
-            uniqueGroups.append(g)
-
-    # Generate dictionary of group name -> position names, corresponding to the allPicsData columns to use
-    groupPoses = OrderedDict()
-    for g in uniqueGroups:
-        groupPoses[g] = []
-        for n in sampleInfo:
-            if sampleInfo[n][level] == g: groupPoses[g].append(n)
 
     # Discard data out of time range
     if timeRange[0] != allPicsData.index[0] or timeRange[1] != None:
         timesFilter = (timeRange[0] <= allPicsData.index) & (allPicsData.index <= timeRange[1])
-        allPicsData = allPicsData.loc[timesFilter, :]
+        plotRawData = allPicsData.loc[timesFilter, :]
+    else:
+        plotRawData = allPicsData
 
-    # Prepare colours
     defaultColours = cycle(defaultColours)
-    colours = {}
-    for g in uniqueGroups:
-        for n in sampleInfo:
-            if sampleInfo[n][level] == g:
-                c = sampleInfo[n]['colour']
-                if c == '': c = next(defaultColours)
-                colours[g] = c
-                break
-        
-    allMeans = pd.DataFrame()  # for use of output
-    allSems = pd.DataFrame()  # for use of output
-    #totalMax = allPicsData[groupPoses[groups[0]]].mean(axis=1).min()
-    #totalMin = allPicsData[groupPoses[groups[0]]].mean(axis=1).max()
-    for g in uniqueGroups:
-        means = allPicsData[groupPoses[g]].mean(axis=1)
-        sems = allPicsData[groupPoses[g]].sem(axis=1)
-        allMeans[g] = means
-        allSems[g] = sems
 
-        ax.plot(means, label=g, c=colours[g])
-        if not all(pd.isna(sems)):
-            ax.fill_between(means.index, means + sems,
-                            means - sems, alpha=0.3)
-    # output
-    allMeans.columns = [f'{c}_mean' for c in allMeans.columns]
-    allSems.columns = [f'{c}_sem' for c in allSems.columns]
-    plotData = pd.concat((allMeans, allSems), axis=1)
+    if forceNoFillBetween:
+        locs = list(sampleInfo.keys())
+        for i, g in enumerate(groups):
+            ax.plot(plotRawData[locs[i]], label=g, c=next(defaultColours))
+        plotData = plotRawData.copy()
+        plotData.columns = [f'{g}_{locs[i]}' for i, g in enumerate(groups)]
+    else:
+        # Deduplicate group keys under this level, keep order
+        groupPoses = OrderedDict()
+        for g in groups:
+            if g in uniqueGroups:
+                continue
+            uniqueGroups.append(g)
+        # Generate dictionary of group name -> position names, corresponding to the allPicsData columns to use
+        for g in uniqueGroups:
+            groupPoses[g] = []
+            for n in sampleInfo:
+                if sampleInfo[n][level] == g: groupPoses[g].append(n)
+        
+        # Prepare colour
+        colourDict = {}
+        for g in groups:
+            for n in sampleInfo:
+                if sampleInfo[n][level] == g:
+                    c = sampleInfo[n]['colour']
+                    if c == '': c = next(defaultColours)
+                    colourDict[g] = c
+                    break
+
+        # prepare data AND plot
+        allMeans = pd.DataFrame()  # for use of output
+        allSems = pd.DataFrame()  # for use of output
+        for g in uniqueGroups:
+            means = plotRawData[groupPoses[g]].mean(axis=1)
+            sems = plotRawData[groupPoses[g]].sem(axis=1)
+            allMeans[g] = means
+            allSems[g] = sems
+            # Plot
+            ax.plot(means, label=g, c=colourDict[g])
+            if not all(pd.isna(sems)):
+                ax.fill_between(means.index, means + sems,
+                                means - sems, alpha=0.3)
+        # output
+        allMeans.columns = [f'{c}_mean' for c in allMeans.columns]
+        allSems.columns = [f'{c}_sem' for c in allSems.columns]
+        plotData = pd.concat((allMeans, allSems), axis=1)
 
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
