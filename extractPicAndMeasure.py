@@ -401,6 +401,9 @@ if __name__ == '__main__':
     ################# Save figure and log #########################################################
     resultDir = os.path.join(rootPath, f'result_{datetime.now().strftime("%Y.%m.%d-%H.%M.%S")}')
     os.mkdir(resultDir)
+    allPicsData.columns = [sampleInfo[k]['strain'] for k in sampleInfo]
+    allPicsData.to_csv(os.path.join(resultDir, 'allData.tsv'), sep='\t')
+    allPicsData.to_excel(os.path.join(resultDir, 'allData.xlsx'))
     plotData.to_csv(os.path.join(resultDir, 'plotData.tsv'), sep='\t')
     plotData.to_excel(os.path.join(resultDir, 'plotData.xlsx'))
     argumentTxt = os.path.join(resultDir, 'arguments.txt')
