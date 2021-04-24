@@ -419,14 +419,19 @@ if __name__ == '__main__':
     pathThisScript = os.path.realpath(__file__)
     for f in diffPosFiles:
         copy2(f, resultDir)
-    pathFuncs = os.path.join(os.path.split(pathThisScript)[0], 'funcs')
-    destFuncs = os.path.join(resultDir, 'funcs')
     try:
-        copy2(pathThisScript, resultDir)
-    except FileNotFoundError:
-        print(f'Plain python script file {pathThisScript} not found.')
-    try:
-        copytree(pathFuncs, destFuncs)
-    except FileNotFoundError:
-        print(f'Sub-modules folder {pathFuncs} not found.')
+        copytree(os.path.join(rootPath,'subImages'), os.path.join(resultDir, 'subImages'))
+    except:
+        print('subImages dir not found.')
+    if sys.argv[0].endswith('.py'):
+        pathFuncs = os.path.join(os.path.split(pathThisScript)[0], 'funcs')
+        destFuncs = os.path.join(resultDir, 'funcs')
+        try:
+            copy2(pathThisScript, resultDir)
+        except FileNotFoundError:
+            print(f'Plain python script file {pathThisScript} not found.')
+        try:
+            copytree(pathFuncs, destFuncs)
+        except FileNotFoundError:
+            print(f'Sub-modules folder {pathFuncs} not found.')
     print('Result saved.')
