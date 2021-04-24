@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+
+#####################################
+# by Du, Chao (杜超)
+# MBT, Leiden University
+# c.du@biology.leidenuniv.nl
+# durand.dc@gmail.com
+#####################################
+
 import traceback
 import os
 import pickle
