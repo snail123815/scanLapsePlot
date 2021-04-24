@@ -28,7 +28,7 @@ if __name__ == '__main__':
                         help="The time of the last picture to plot, in hours")
     parser.add_argument('--percentage', default=1.0, type=float,
                         help='This precent is to specify the precentage of the picture width to be considered')
-    parser.add_argument('-r', '--resizeFactor', type=float, default=0.35, metavar='FLOAT',
+    parser.add_argument('--resizeFactor', type=float, default=0.35, metavar='FLOAT',
                         help='Factor of original size (0-1), default 0.35')
     parser.add_argument('--noTimeFromFile', action='store_true',
                         help='Time from original file will be stored in all new files if this is not set')
@@ -176,18 +176,18 @@ if __name__ == '__main__':
 
     if doExtractPics:
         print('Clearing existing folders...')
-        keepDirList = ['result_', 'original_images']
-        for r, ds, fs in os.walk(rootPath):
-            for d in ds:
-                if any(x in d for x in keepDirList):
-                    continue
-                if d == 'cropped_ori' and useCroppedImg == True:
-                    continue
-                try:
-                    rmtree(d)
-                except FileNotFoundError:
-                    pass
+        removeDirList = ['subImages']
+        dirList = []
+        for _, ds, _ in os.walk(rootPath):
+            dirList = ds
             break
+        if not useCroppedImg:
+            removeDirList.append('cropped_ori')
+        for d in removeDirList:
+            if d in dirList:
+                rmtree(os.path.join(rootPath, d))
+            else:
+                print(f'{d} not found in {rootPath}')
         print('Creating folders...')
         targetPaths = createFolders(rootPath, folders, reset=True)
 
