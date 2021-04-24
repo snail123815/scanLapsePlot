@@ -176,20 +176,18 @@ if __name__ == '__main__':
 
     if doExtractPics:
         print('Clearing existing folders...')
-        for p, _, _ in os.walk(rootPath):
-            if p == rootPath:
-                continue
-            dname = os.path.split(p)[-1]
-            if dname.startswith('result_'):
-                continue
-            if dname == 'original_images':
-                continue
-            if dname == 'cropped_ori' and useCroppedImg == True:
-                continue
-            try:
-                rmtree(p)
-            except FileNotFoundError:
-                pass
+        keepDirList = ['result_', 'original_images']
+        for r, ds, fs in os.walk(rootPath):
+            for d in ds:
+                if any(x in d for x in keepDirList):
+                    continue
+                if d == 'cropped_ori' and useCroppedImg == True:
+                    continue
+                try:
+                    rmtree(d)
+                except FileNotFoundError:
+                    pass
+            break
         print('Creating folders...')
         targetPaths = createFolders(rootPath, folders, reset=True)
 
