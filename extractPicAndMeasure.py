@@ -416,7 +416,7 @@ if __name__ == '__main__':
     plotData.to_csv(os.path.join(resultDir, 'plotData.tsv'), sep='\t')
     plotData.to_excel(os.path.join(resultDir, 'plotData.xlsx'))
     argumentTxt = os.path.join(resultDir, 'arguments.txt')
-    fig.savefig(os.path.join(resultDir, 'figure.svg'))
+    fig.savefig(os.path.join(resultDir, f'figure_{datetime.now().strftime("%Y.%m.%d-%H.%M.%S")}.svg'))
     with open(argumentTxt, 'w') as f:
         f.write('python3 ' + ' '.join(sys.argv) + '\n\n')
         f.write(str(args))
