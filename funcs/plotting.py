@@ -43,21 +43,19 @@ def plotMeasured(
 
     groups = [sampleInfo[posName][level] for posName in sampleInfo]
     uniqueGroups = []
+    plotData = allPicsData.copy(deep=True)
 
     # Discard data out of time range
-    if timeRange[0] != allPicsData.index[0] or timeRange[1] != None:
-        timesFilter = (timeRange[0] <= allPicsData.index) & (allPicsData.index <= timeRange[1])
-        plotRawData = allPicsData.loc[timesFilter, :]
-    else:
-        plotRawData = allPicsData
+    if timeRange[0] != plotData.index[0] or timeRange[1] != None:
+        timesFilter = (timeRange[0] <= plotData.index) & (plotData.index <= timeRange[1])
+        plotData = plotData.loc[timesFilter, :]
 
     defaultColours = cycle(defaultColours)
 
     if forceNoFillBetween:
         locs = list(sampleInfo.keys())
         for i, g in enumerate(groups):
-            ax.plot(plotRawData[locs[i]], label=g, c=next(defaultColours))
-        plotData = plotRawData.copy()
+            ax.plot(plotData[locs[i]], label=g, c=next(defaultColours))
         plotData.columns = [f'{g}_{locs[i]}' for i, g in enumerate(groups)]
     else:
         # Deduplicate group keys under this level, keep order
@@ -86,8 +84,8 @@ def plotMeasured(
         allMeans = pd.DataFrame()  # for use of output
         allSems = pd.DataFrame()  # for use of output
         for g in uniqueGroups:
-            means = plotRawData[groupPoses[g]].mean(axis=1)
-            sems = plotRawData[groupPoses[g]].sem(axis=1)
+            means = plotData[groupPoses[g]].mean(axis=1)
+            sems = plotData[groupPoses[g]].sem(axis=1)
             allMeans[g] = means
             allSems[g] = sems
             # Plot
