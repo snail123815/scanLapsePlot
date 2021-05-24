@@ -104,10 +104,10 @@ def plotMeasured(
     ax.spines['right'].set_visible(False)
     ax.xaxis.set_ticks_position('bottom')
     ax.yaxis.set_ticks_position('left')
-    timeSpan = allPicsData.index[-1] - allPicsData.index[0]
+    timeSpan = plotData.index[-1] - plotData.index[0]
     xtickInter = timeSpan//8
-    ax.set_xticks(np.arange(int(allPicsData.index[0]), int(allPicsData.index[-1]), xtickInter))
-    ax.set_xlim([allPicsData.index[0] - timeSpan * 0.05, allPicsData.index[-1] + timeSpan * 0.05])
+    ax.set_xticks(np.arange(int(plotData.index[0]), int(plotData.index[-1]), xtickInter))
+    ax.set_xlim([plotData.index[0] - timeSpan * 0.05, plotData.index[-1] + timeSpan * 0.05])
     drawVLines(ax, vlines, vlineColours, lowerVlines=lowerVlines)
     plt.xlabel('time (h)')
     plt.ylabel('brightness')
