@@ -160,4 +160,4 @@ No special errors happened. It seems that `openpyxl` import has been recognised 
 ## Bug
 
 - [x] Changeing time range only eliminates the data but not resetting xrange
-- [ ] Data saving do not include some data columns. Column names are full, but data lost.
+- [ ] Data saving do not include some data columns. Column names are full, but data lost. Needs to be tested.
