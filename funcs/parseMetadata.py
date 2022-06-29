@@ -100,7 +100,9 @@ def getPositions(positionTsvPath):
                 posDict[locType] = {}
                 # remove padding deal here, only allowing 'WidthHeight' and 'TwoPositions'
                 if locType == 'removePadding':
-                    assert pLocType in ['TwoPositions', 'WidthHeight'], f'Please set padding position under "WidthHeight" and "TwoPositions", now it is under "{pLocType}"'
+                    assert pLocType in ['TwoPositions', 'WidthHeight'], \
+                        'Please set padding position under "WidthHeight" and "TwoPositions",' + \
+                            f' now it is under "{pLocType}"'
                     position = [int(elem) for elem in elements[1:]]
                     # already obey rule of "TwoPositions"
                     if pLocType == 'WidthHeight':
@@ -129,7 +131,7 @@ def getPositions(positionTsvPath):
                     r = int(position[2] / 2)
                     position = [x - r for x in position[:2]] + [x + r for x in position[:2]]
                 elif locType == 'WidthHeight':
-                    position = position[:2] + [sum(x) for x in zip(position[2:], position[2:4])]
+                    position = position[:2] + [sum(x) for x in zip(position[:2], position[2:4])]
                 elif locType == 'TwoPositions':
                     position = position[:4]
                 posDict[locType][posName] = position
