@@ -82,7 +82,7 @@ def measureImgs(path, dictOldScanTime=None, measureType='centreDisk', polygons=[
     else:
         times = [getTime(f) for f in filePaths[:2]]
         firstInterval = times[1] - times[0]
-        if firstInterval < 300:
+        if firstInterval < 3:
             useFileTime = False
 
     # Measurement: produce an array of times and an array of measured values
@@ -92,7 +92,8 @@ def measureImgs(path, dictOldScanTime=None, measureType='centreDisk', polygons=[
             time = getTime(filePath)/3600  # convert to hours
         else:
             file = os.path.split(filePath)[1]
-            n = int(re.findall(r'[0-9]+', file)[-1])
+            fileBaseName = '_'.join(file.split('_')[:-1])
+            n = int(re.findall(r'[0-9]+', fileBaseName)[-1])
             time = n * fileNumberTimeInterval
         im = imread(filePath, as_gray=True)
         if measureType == 'centreDisk':
