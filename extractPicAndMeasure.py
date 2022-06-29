@@ -206,7 +206,7 @@ if __name__ == '__main__':
             except IndexError:
                 nextGroupStart = len(fileList)
 
-            if i != 0:
+            if i != 0: # Multiple position files
                 posDict = getPositions(sampleInfoTsvPath)
                 posToCrop = getPosToCrop(posDict, useCroppedImg, locFromCropped)
             # Prepare cropping files
@@ -216,7 +216,7 @@ if __name__ == '__main__':
             filePathList = [os.path.join(imgPath, file) for file in subFileList]
             threadPool = ThreadPoolExecutor(max_workers=os.cpu_count())
             futures = []
-            for i, file in enumerate(filePathList):
+            for i, file in enumerate(filePathList): # repeated "i"
                 future = threadPool.submit(
                     crop, file, posToCrop, targetPaths,
                     paddingPos=paddingPos,
@@ -265,7 +265,7 @@ if __name__ == '__main__':
 
     if measure:
 
-        threadPool = ThreadPoolExecutor(max_workers=8)
+        threadPool = ThreadPoolExecutor(max_workers=1)
         futures = []
 
         for folder in sampleInfo:

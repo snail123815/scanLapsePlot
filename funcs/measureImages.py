@@ -8,8 +8,17 @@ from skimage.io import imread
 from funcs import determineExtension
 
 
-def measureImgs(path, dictOldScanTime=None, measureType='centreDisk', polygons=[(0, 0, 1, 0, 0, 1), ], percentage=1.0, forceUseFileNumber=False, fileNumberTimeInterval=1) -> np.ndarray:
-    """Measure all images in path\n
+def measureImgs(
+    path,
+    dictOldScanTime=None,
+    measureType='centreDisk',
+    polygons=[(0, 0, 1, 0, 0, 1), ],
+    percentage=1.0,
+    forceUseFileNumber=False,
+    fileNumberTimeInterval=1
+) -> tuple[str, np.ndarray]:
+    """
+    Measure all images in path\n
     Return a numpy array of shape (len(files), 2).\n
 
     Args:\n
