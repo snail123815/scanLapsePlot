@@ -33,6 +33,9 @@ if __name__ == '__main__':
                         help='tsv file for sample information, same name will be averaged, when multiple location files are needed, use the first one for this mandatory argument')
     parser.add_argument('--normType', choices=['None', 'Each', 'Combined'], default='Combined',
                         help="Specify how the normalisation is done",)
+    parser.add_argument('--noZeroing', action='store_true',
+                        help="If not set, all data points are subtracted by the average of "+\
+                            "the measurment of the first 3 images.",)
     parser.add_argument('--endTiming', type=float,
                         help="The time of the last picture to plot, in hours")
     parser.add_argument('--percentage', default=1.0, type=float,
@@ -325,11 +328,14 @@ if __name__ == '__main__':
             timeSort = np.argsort(data[:, 0])
             data = data[timeSort, :]
             # Normalization
-            if normType == 'Each':
+            if not args.noZeroing:
                 # use first 3 hours data as zero point
                 zeroPoint = data[:3, 1].mean()
                 values = data[:, 1] - zeroPoint
+            if normType == 'Each':
                 data[:, 1] = values/values.max()
+            else:
+                data[:, 1] = values
 
             # Put into data frame
             toDf = pd.DataFrame(data[:, 1], index=data[:, 0], columns=[posName])
